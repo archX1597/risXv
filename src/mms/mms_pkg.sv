@@ -6,7 +6,8 @@ package mms_pkg;
     `define CACHE_TAG 20
     `define CACHE_OFFSET 4 // 2**4 Byte = 16 Byte ,1 word = 4 Bytes, Data = 4 Words
     `define PAGE_OFFSET 12
-    `define PAGE_ADDR   20
+    `define VPN1   10
+    `define VPN0   10
 
     typedef struct packed {
         logic [`CACHE_TAG  - 1 : 0] tag;
@@ -21,7 +22,8 @@ package mms_pkg;
     } cache_line_t;
 
     typedef struct packed {
-        logic [`PAGE_ADDR   - 1 : 0] pg_addr ;
+        logic [`VPN1   - 1  : 0]      vpn1 ;
+        logic [`VPN0   - 1  : 0]      vpn0 ;
         logic [`PAGE_OFFSET - 1 : 0] pg_offset ;
     } va_t;
 

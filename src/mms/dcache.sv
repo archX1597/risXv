@@ -1,6 +1,5 @@
 module dcache(
     input 
-);
-
+);	
 
 endmodule
