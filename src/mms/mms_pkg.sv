@@ -5,6 +5,8 @@ package mms_pkg;
     `define CACHE_INDEX 8
     `define CACHE_TAG 20
     `define CACHE_OFFSET 4 // 2**4 Byte = 16 Byte ,1 word = 4 Bytes, Data = 4 Words
+
+    `define PPN 22
     `define PAGE_OFFSET 12
     `define VPN1   10
     `define VPN0   10

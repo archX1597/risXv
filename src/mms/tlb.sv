@@ -1,7 +1,7 @@
 import mms_pkg::*;
 
 module tlb(
-    input 
+    input [`]
 )
 
 
