@@ -1,0 +1,8 @@
+M@@plru_32@@
+N@@itlb_refull_init_en@@
+T@@70@@76@@
+N@@itlb_rd_vld@@
+T@@164@@170@@
+N@@hit_updt_en@@
+N@@wr_updt_en@@
+T@@212@@218@@

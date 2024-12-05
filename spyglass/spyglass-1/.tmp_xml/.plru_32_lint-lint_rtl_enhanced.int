@@ -1,0 +1,5 @@
+INPUT@@/home/icvm/my_prj/risXv/spyglass/spyglass-1/lint/lint_rtl_enhanced/spyglass_reports@@/home/icvm/my_prj/risXv/spyglass/spyglass-1/html_reports/data_files/@@plru_32@@lint-lint_rtl_enhanced@@
+COPY@@/home/icvm/my_prj/risXv/spyglass/spyglass-1/lint/lint_rtl_enhanced/spyglass_reports/moresimple.rpt@@data_files/plru_32_lint-lint_rtl_enhanced_moresimple.rpt@@
+COPY@@/home/icvm/my_prj/risXv/spyglass/spyglass-1/lint/lint_rtl_enhanced/spyglass_reports/no_msg_reporting_rules.rpt@@data_files/plru_32_lint-lint_rtl_enhanced_no_msg_reporting_rules.rpt@@
+PROCESS@@SpyGlass@@starc2005@@erc@@latch@@starc@@timing@@lint@@simulation@@starc2002@@openmore@@morelint
+COPY@@/home/icvm/my_prj/risXv/spyglass/spyglass-1/lint/lint_rtl_enhanced/spyglass.log@@data_files/plru_32_lint-lint_rtl_enhanced_spyglass.log@@

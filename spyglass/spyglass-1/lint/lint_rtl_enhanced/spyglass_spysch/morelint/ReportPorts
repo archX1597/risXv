@@ -1,0 +1,9 @@
+SCHEMA@@PName@@Dir@@Msb@@Lsb@@Desc@@DU@@DU_BBOX
+VALUE@@rstn_i@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@clk_i@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@entry_valid_i@@INPUT@@31@@0@@-@@plru_32@@No
+VALUE@@itlb_rd_hit@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@itlb_rd_vld@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@itlb_refull_init_en@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@itlb_refill_vld@@INPUT@@0@@0@@-@@plru_32@@No
+VALUE@@itlb_refill_onehot_o@@OUTPUT@@31@@0@@-@@plru_32@@No
