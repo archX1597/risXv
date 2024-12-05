@@ -1,6 +1,5 @@
-package mms_pkg;
-    `include "risXv.svh"
-    `include "dreg.svh"
+import risXv_macro::*;
+package mms_pkg;   
     typedef struct packed {
         logic [`CACHE_TAG_WD  - 1 : 0] tag;
         logic [`CACHE_INDEX_WD - 1 : 0] index;

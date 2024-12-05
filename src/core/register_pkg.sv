@@ -1,5 +1,5 @@
 package register_pkg;
-    `include "risXv.svh"
+    `include "risXv.sv"
     typedef struct packed{
         logic [`MODE_WD - 1 : 0]  mode;
         logic [`ASID_WD - 1 : 0]  aisd;
