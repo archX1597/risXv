@@ -1,9 +1,0 @@
-Module Name,Module Type,Port Name,Direction,Width,Index,Comment Source,Comment 
-plru_32,Top_Level,rstn_i,INPUT,1,-,-,-
-plru_32,Top_Level,clk_i,INPUT,1,-,-,-
-plru_32,Top_Level,entry_valid_i,INPUT,32,[31:0],-,-
-plru_32,Top_Level,itlb_rd_hit,INPUT,1,-,-,-
-plru_32,Top_Level,itlb_rd_vld,INPUT,1,-,-,-
-plru_32,Top_Level,itlb_refull_init_en,INPUT,1,-,-,-
-plru_32,Top_Level,itlb_refill_vld,INPUT,1,-,-,-
-plru_32,Top_Level,itlb_refill_onehot_o,OUTPUT,32,[31:0],-,-

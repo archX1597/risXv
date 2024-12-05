@@ -1,3 +1,0 @@
-0 ../src/risXv.sv
-1 ../src/mms/mms_pkg.sv
-2 ../src/mms/plru.sv
