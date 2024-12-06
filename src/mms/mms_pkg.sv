@@ -1,5 +1,5 @@
-import risXv_macro::*;
-package mms_pkg;   
+package mms_pkg;
+    import risXv_macro::*;   
     typedef struct packed {
         logic [`CACHE_TAG_WD  - 1 : 0] tag;
         logic [`CACHE_INDEX_WD - 1 : 0] index;

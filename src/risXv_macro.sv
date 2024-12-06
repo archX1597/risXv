@@ -18,7 +18,7 @@ package risXv_macro;
 `define D_FLIP_FLOP(name, clk, rst, d, q,en) \
     always_ff @(posedge clk or negedge rst) begin:name \
         if (!rst) begin \
-            q <= 1'b0; \
+            q <= 'b0; \
         end else if(en) begin \
             q <= d; \
         end \

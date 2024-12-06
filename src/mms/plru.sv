@@ -2,10 +2,10 @@ import mms_pkg::*;
 module plru_32(
         input logic rstn_i,clk_i,
         input logic [`TLB_ENTRY_SIZE - 1 : 0] entry_valid_i,
-        input logic itlb_rd_hit,
-        input logic itlb_rd_vld,
-        input logic itlb_refull_init_en,
-        input logic itlb_refill_vld,
+        input logic [`TLB_ENTRY_SIZE - 1 : 0] itlb_rd_hit_i,
+        input logic itlb_rd_vld_i,
+        input logic itlb_refull_init_en_i,
+        input logic itlb_refill_vld_i,
         output logic [`TLB_ENTRY_SIZE - 1 : 0] itlb_refill_onehot_o
     );//for tlb
 
@@ -22,7 +22,7 @@ module plru_32(
     logic wr_updt_en;
 
 
-    assign wr_updt_en = itlb_refill_vld;
+    assign wr_updt_en = itlb_refill_vld_i;
 
     always_comb  begin:init_refill_write_update
         casez(entry_valid_i)
@@ -64,13 +64,13 @@ module plru_32(
     end
 
 // @DVT_EXPAND_MACRO_INLINE_START
-// `D_FLIP_FLOP (refill_Index_Register, clk_i, rstn_i, write_index, refill_index,itlb_refull_init_en);
+// `D_FLIP_FLOP (refill_Index_Register, clk_i, rstn_i, write_index, refill_index,itlb_refull_init_en_i);
 // @DVT_EXPAND_MACRO_INLINE_ORIGINAL
 
     always_ff @(posedge clk_i or negedge rstn_i) begin:refill_Index_Register
         if (!rstn_i) begin
-            refill_index <= 1'b0;
-        end else if(itlb_refull_init_en) begin
+            refill_index <= 'b0;
+        end else if(itlb_refull_init_en_i) begin
             refill_index <= write_index;
         end
     end;
@@ -118,7 +118,7 @@ module plru_32(
     //start: hit stage
 
     always_comb begin:hit_onehot2bin
-        unique case(itlb_rd_hit)
+        unique case(itlb_rd_hit_i)
             32'b00000000000000000000000000000001: hit_index_d[4:0] = 5'b00000;
             32'b00000000000000000000000000000010: hit_index_d[4:0] = 5'b00001;
             32'b00000000000000000000000000000100: hit_index_d[4:0] = 5'b00010;
@@ -158,13 +158,13 @@ module plru_32(
 
 
 // @DVT_EXPAND_MACRO_INLINE_START
-// `D_FLIP_FLOP(hit_index_register, clk_i, rstn_i, hit_index_d, hit_index_q, itlb_rd_vld)
+// `D_FLIP_FLOP(hit_index_register, clk_i, rstn_i, hit_index_d, hit_index_q, itlb_rd_vld_i)
 // @DVT_EXPAND_MACRO_INLINE_ORIGINAL
 
     always_ff @(posedge clk_i or negedge rstn_i) begin:hit_index_register
         if (!rstn_i) begin
-            hit_index_q <= 1'b0;
-        end else if(itlb_rd_vld) begin
+            hit_index_q <= 'b0;
+        end else if(itlb_rd_vld_i) begin
             hit_index_q <= hit_index_d;
         end
     end
