@@ -15,7 +15,7 @@ module plru_32(
         logic [3:0] p2;
         logic [7:0] p3;
         logic [15:0] p4;
-    } plru_q,plru_d;
+    } plru_q,plru_d_refill,plru_d_hit;
 
     logic [$clog2(`TLB_ENTRY_SIZE) - 1 : 0 ] write_index,hit_index_d,hit_index_q,refill_index,plru_index;
     logic hit_updt_en;
@@ -176,29 +176,25 @@ module plru_32(
         for ( int i = 0 ; i < $clog2(`TLB_ENTRY_SIZE) ; i++)
             for (int j = 0 ; j < 2**i ; j++) begin
                 if      (i == 0) begin
-                    plru_d.p0 = wr_updt_en  ? !refill_index [4] :
-                        hit_updt_en ? !hit_index_d  [4] :
-                        plru_d.p0;
+                    plru_d_refill.p0 = wr_updt_en  ? !refill_index [4] : plru_q.p0;
+                    plru_d_hit.p0    = hit_updt_en ? !hit_index_d  [4] : plru_q.p0;
+    
                 end
                 else if (i == 1) begin
-                    plru_d.p1[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :
-                        (j == (refill_index >> (5-i)))&&hit_updt_en ?  j*2 == (refill_index >> (4-i)) :
-                        plru_d.p1[j];
+                    plru_d_refill.p1[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :plru_q.p1[j] ;
+                    plru_d_hit.p1   [j] = (j == (hit_index_d >> (5-i)))&&hit_updt_en  ?  j*2 == (hit_index_d >> (4-i))  :plru_q.p1[j];
                 end
                 else if (i == 2) begin
-                    plru_d.p2[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :
-                        (j == (refill_index >> (5-i)))&&hit_updt_en ?  j*2 == (refill_index >> (4-i)) :
-                        plru_d.p2[j];
+                    plru_d_refill.p2[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :plru_q.p2[j] ;
+                    plru_d_hit.p2   [j] = (j == (hit_index_d>> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) :plru_q.p2[j] ;
                 end
                 else if (i == 3) begin
-                    plru_d.p3[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :
-                        (j == (refill_index >> (5-i)))&&hit_updt_en ?  j*2 == (refill_index >> (4-i)) :
-                        plru_d.p3[j];
+                    plru_d_refill.p3[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) : plru_q.p3[j];
+                    plru_d_hit.p3   [j] =    (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) :plru_q.p3[j];
                 end
                 else begin
-                    plru_d.p4[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :
-                        (j == (refill_index >> (5-i)))&&hit_updt_en ?  j*2 == (refill_index >> (4-i)) :
-                        plru_d.p4[j];
+                    plru_d_refill.p4[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) : plru_q.p4[j];
+                    plru_d_hit.p4  [j]  =  (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) : plru_q.p4[j];
                 end
             end
     end
@@ -211,10 +207,12 @@ module plru_32(
 
     always_ff @(posedge clk_i or negedge rstn_i) begin:plru_register
         if (!rstn_i) begin
-            plru_q <= 1'b0;
-        end else if(wr_updt_en||hit_updt_en) begin
-            plru_q <= plru_d;
-        end
+            plru_q <= 'b0;
+        end else if(wr_updt_en) begin
+            plru_q <= plru_d_refill;
+        end else if(hit_updt_en)
+            plru_q <= plru_d_hit;
+
     end
 // @DVT_EXPAND_MACRO_INLINE_END
 
