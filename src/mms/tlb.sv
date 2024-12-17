@@ -13,10 +13,10 @@ module itlb(
 
 
 //Page entry and Page
+    
 
 
-//plru 
-
+//state machine for TLB 
 
     always_comb begin
         

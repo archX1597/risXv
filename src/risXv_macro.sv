@@ -1,11 +1,12 @@
 package risXv_macro;
 `define DATA_WD 32
 `define INST_WD 32
+`define PHY_ADDR 34
 
-`define CACHE_LINE 256
+`define CACHE_SET 256
 `define CACHE_WAY   4
 `define CACHE_INDEX_WD 8
-`define CACHE_TAG_WD 20
+`define CACHE_TAG_WD 22
 `define CACHE_OFFSET 4 // 2**4 Byte = 16 Byte ,1 word = 4 Bytes, Data = 4 Words
 `define MODE_WD
 `define ASID_WD 9

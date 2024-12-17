@@ -92,7 +92,7 @@ ${MY_SIM_EXEC}: ${MY_SRC_FILES} ${MY_ENV_FILES} ${MY_TB_TOP} ${TEST_NAME_MARKER}
 .PHONY: sim 
 sim: update_sim_marker
 	@echo "Running simulation in ${MY_OUT_DIR} for ${MY_TEST_NAME}..."
-	cd ${MY_OUT_DIR} && ${MY_SIM_EXEC} ${MY_SIM_OPTS}
+	cd ${MY_OUT_DIR} && cp ${MY_VERDI_RC} ./ && ${MY_SIM_EXEC} ${MY_SIM_OPTS}
 
 # Coverage report target
 .PHONY: merge_cov

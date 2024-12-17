@@ -11,17 +11,16 @@ module plru_32(
 
     /*@WAVEDROM_START
      { signal: [
-        { name: "clk_i",  wave: "p.......p"},
-        { name: "itlb_refill_rq_i", wave: "0100000", 
-         data: ["q", "b", "c", "d"], 
-        },
-        { name:"itlb_refill_one_hot_o",wave:"234...",
-          data:["NA","NA","S"]
-        }
-        
-        ]
-    }
-    
+     { name: "clk_i",  wave: "p.......p"},
+     { name: "itlb_refill_rq_i", wave: "0100000",
+     data: ["q", "b", "c", "d"],
+     },
+     { name:"itlb_refill_one_hot_o",wave:"234...",
+     data:["NA","NA","S"]
+     }
+
+     ]
+     }
      @WAVEDROM_END */
 
     struct packed {
@@ -40,7 +39,7 @@ module plru_32(
     assign wr_updt_en = itlb_refill_vld_i;
 
     always_comb  begin:init_refill_write_update
-        casez(entry_valid_i)
+        unique casez(entry_valid_i)
             32'b???????????????????????????????0: write_index[4:0] = 5'b00000;
             32'b??????????????????????????????01: write_index[4:0] = 5'b00001;
             32'b?????????????????????????????011: write_index[4:0] = 5'b00010;
@@ -193,23 +192,34 @@ module plru_32(
                 if      (i == 0) begin
                     plru_d_refill.p0 = wr_updt_en  ? !refill_index [4] : plru_q.p0;
                     plru_d_hit.p0    = hit_updt_en ? !hit_index_d  [4] : plru_q.p0;
-    
+
                 end
                 else if (i == 1) begin
-                    plru_d_refill.p1[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :plru_q.p1[j] ;
-                    plru_d_hit.p1   [j] = (j == (hit_index_d >> (5-i)))&&hit_updt_en  ?  j*2 == (hit_index_d >> (4-i))  :plru_q.p1[j];
+                    plru_d_refill.p1[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ? 
+                                         j*2 == (refill_index >> (4-i))               :
+                                         plru_q.p1[j] ;
+                    plru_d_hit.p1   [j] = (j == (hit_index_d >> (5-i)))&&hit_updt_en  ? 
+                                         j*2 == (hit_index_d >> (4-i))                :
+                                         plru_q.p1[j];
                 end
                 else if (i == 2) begin
-                    plru_d_refill.p2[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) :plru_q.p2[j] ;
-                    plru_d_hit.p2   [j] = (j == (hit_index_d>> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) :plru_q.p2[j] ;
+                    plru_d_refill.p2[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  
+                                          j*2 == (refill_index >> (4-i)) :
+                                          plru_q.p2[j] ;
+                    plru_d_hit.p2   [j] = (j == (hit_index_d>> (5-i)))&&hit_updt_en ?  
+                                          j*2 == (hit_index_d >> (4-i)) :plru_q.p2[j] ;
                 end
                 else if (i == 3) begin
-                    plru_d_refill.p3[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) : plru_q.p3[j];
-                    plru_d_hit.p3   [j] =    (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) :plru_q.p3[j];
+                    plru_d_refill.p3[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ? 
+                                          j*2 == (refill_index >> (4-i)) : plru_q.p3[j];
+                    plru_d_hit.p3   [j] =  (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  
+                                            j*2 == (hit_index_d >> (4-i)) :plru_q.p3[j];
                 end
                 else begin
-                    plru_d_refill.p4[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  j*2 == (refill_index >> (4-i)) : plru_q.p4[j];
-                    plru_d_hit.p4  [j]  =  (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  j*2 == (hit_index_d >> (4-i)) : plru_q.p4[j];
+                    plru_d_refill.p4[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  
+                                          j*2 == (refill_index >> (4-i)) : plru_q.p4[j];
+                    plru_d_hit.p4  [j]  = (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  
+                                          j*2 == (hit_index_d >> (4-i)) : plru_q.p4[j];
                 end
             end
     end
@@ -266,7 +276,6 @@ module plru_32(
                     ? (plru_q.p3[1] ? plru_q.p4[3] : plru_q.p4[2])
                     : (plru_q.p3[0] ? plru_q.p4[1] : plru_q.p4[0])));
     end
-
 
 
 
