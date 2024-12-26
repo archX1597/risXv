@@ -8,7 +8,9 @@ module plru_32(
         input logic itlb_refill_vld_i,
         output logic [`TLB_ENTRY_SIZE - 1 : 0] itlb_refill_onehot_o
     );//for tlb
+    
 
+    
     /*@WAVEDROM_START
      { signal: [
      { name: "clk_i",  wave: "p.......p"},

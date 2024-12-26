@@ -32,7 +32,17 @@ package mms_pkg;
 
 //MMU
     typedef struct packed {
-        va_t va;
+        logic [`PPN1_WD - 1 : 0] ppn1;
+        logic [`PPN0_WD - 1 : 0] ppn0;
+        logic [1:0] RSW;
+        logic D,A,G,U,X,W,R,V;
+    } pte_t;
 
-    } page_entry;
+    typedef struct packed {
+        pte_t pg_entry;
+        logic [`VPN0_WD + `VPN1_WD - 1 : 0 ] tag;
+        logic [8:0] asid;
+        logic [1:0] mode;
+    } itlb_entry_t;
+
 endpackage

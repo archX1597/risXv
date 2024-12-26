@@ -1,7 +1,12 @@
 package risXv_macro;
+`define MXLEN 32
 `define DATA_WD 32
 `define INST_WD 32
-`define PHY_ADDR 34
+
+
+//Memory Manage System
+`define PADDR_WD 34
+`define VADDR_WD 32
 
 `define CACHE_SET 256
 `define CACHE_WAY   4
@@ -11,6 +16,8 @@ package risXv_macro;
 `define MODE_WD
 `define ASID_WD 9
 `define PPN_WD 22
+`define PPN1_WD 12
+`define PPN0_WD 10
 `define PAGE_OFFSET 12
 `define VPN1_WD   10
 `define VPN0_WD   10
