@@ -1,7 +1,8 @@
 package mms_pkg;
 
 //Cache
-    import risXv_macro::*;   
+    import risXv_macro::*;
+    import mms_macro::*;  
     typedef struct packed {
         logic [`CACHE_TAG_WD   - 1 : 0] tag;
         logic [`CACHE_INDEX_WD - 1 : 0] index;
@@ -34,15 +35,26 @@ package mms_pkg;
     typedef struct packed {
         logic [`PPN1_WD - 1 : 0] ppn1;
         logic [`PPN0_WD - 1 : 0] ppn0;
-        logic [1:0] RSW;
-        logic D,A,G,U,X,W,R,V;
+        logic [1:0] rsw;
+        logic dirty;
+        logic accessed;
+        logic global_v;
+        logic user;
+        logic read,write,xcute;
+        logic valid;
     } pte_t;
 
     typedef struct packed {
+        logic [`VPN1_WD - 1 : 0] vpn1;
+        logic [`VPN0_WD - 1 : 0] vpn0;
+    } vpn_t;
+
+    typedef struct packed {
         pte_t pg_entry;
-        logic [`VPN0_WD + `VPN1_WD - 1 : 0 ] tag;
-        logic [8:0] asid;
-        logic [1:0] mode;
+        vpn_t vpn;
+        logic [`PAGE_OFFSET - 1 : 0] pg_offset;
+        logic [`ASID_WD - 1:0] asid;
+        logic [`MODE_WD - 1:0] mode;
     } itlb_entry_t;
 
 endpackage

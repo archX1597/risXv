@@ -187,44 +187,49 @@ module plru_32(
 // @DVT_EXPAND_MACRO_INLINE_END
 
 
-
-    always_comb begin
-        for ( int i = 0 ; i < $clog2(`TLB_ENTRY_SIZE) ; i++)
-            for (int j = 0 ; j < 2**i ; j++) begin
-                if      (i == 0) begin
-                    plru_d_refill.p0 = wr_updt_en  ? !refill_index [4] : plru_q.p0;
-                    plru_d_hit.p0    = hit_updt_en ? !hit_index_d  [4] : plru_q.p0;
-
-                end
-                else if (i == 1) begin
-                    plru_d_refill.p1[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ? 
-                                         j*2 == (refill_index >> (4-i))               :
-                                         plru_q.p1[j] ;
-                    plru_d_hit.p1   [j] = (j == (hit_index_d >> (5-i)))&&hit_updt_en  ? 
-                                         j*2 == (hit_index_d >> (4-i))                :
-                                         plru_q.p1[j];
-                end
-                else if (i == 2) begin
-                    plru_d_refill.p2[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  
-                                          j*2 == (refill_index >> (4-i)) :
-                                          plru_q.p2[j] ;
-                    plru_d_hit.p2   [j] = (j == (hit_index_d>> (5-i)))&&hit_updt_en ?  
-                                          j*2 == (hit_index_d >> (4-i)) :plru_q.p2[j] ;
-                end
-                else if (i == 3) begin
-                    plru_d_refill.p3[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ? 
-                                          j*2 == (refill_index >> (4-i)) : plru_q.p3[j];
-                    plru_d_hit.p3   [j] =  (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  
-                                            j*2 == (hit_index_d >> (4-i)) :plru_q.p3[j];
-                end
-                else begin
-                    plru_d_refill.p4[j] = (j == (refill_index >> (5-i)))&&wr_updt_en  ?  
-                                          j*2 == (refill_index >> (4-i)) : plru_q.p4[j];
-                    plru_d_hit.p4  [j]  = (j == (hit_index_d >> (5-i)))&&hit_updt_en ?  
-                                          j*2 == (hit_index_d >> (4-i)) : plru_q.p4[j];
-                end
+always_comb begin
+    for (int i = 0; i < $clog2(`TLB_ENTRY_SIZE); i++)
+        for (int j = 0; j < 2**i; j++) begin
+            if (i == 0) begin
+                plru_d_refill.p0 = wr_updt_en  ? !refill_index[4] : plru_q.p0;
+                plru_d_hit.p0    = hit_updt_en ? !hit_index_d[4]  : plru_q.p0;
             end
-    end
+            else if (i == 1) begin
+                plru_d_refill.p1[j] = (j == (refill_index >> (5-i))) && wr_updt_en ? 
+                                      j*2 == (refill_index >> (4-i))              :
+                                      plru_q.p1[j];
+                plru_d_hit.p1[j]    = (j == (hit_index_d >> (5-i))) && hit_updt_en ? 
+                                      j*2 == (hit_index_d >> (4-i))               :
+                                      plru_q.p1[j];
+            end
+            else if (i == 2) begin
+                plru_d_refill.p2[j] = (j == (refill_index >> (5-i))) && wr_updt_en ? 
+                                      j*2 == (refill_index >> (4-i))              :
+                                      plru_q.p2[j];
+                plru_d_hit.p2[j]    = (j == (hit_index_d >> (5-i))) && hit_updt_en ? 
+                                      j*2 == (hit_index_d >> (4-i))               :
+                                      plru_q.p2[j];
+            end
+            else if (i == 3) begin
+                plru_d_refill.p3[j] = (j == (refill_index >> (5-i))) && wr_updt_en ? 
+                                      j*2 == (refill_index >> (4-i))              :
+                                      plru_q.p3[j];
+                plru_d_hit.p3[j]    = (j == (hit_index_d >> (5-i))) && hit_updt_en ? 
+                                      j*2 == (hit_index_d >> (4-i))               :
+                                      plru_q.p3[j];
+            end
+            else begin
+                plru_d_refill.p4[j] = (j == (refill_index >> (5-i))) && wr_updt_en ? 
+                                      j*2 == (refill_index >> (4-i))              :
+                                      plru_q.p4[j];
+                plru_d_hit.p4[j]    = (j == (hit_index_d >> (5-i))) && hit_updt_en ? 
+                                      j*2 == (hit_index_d >> (4-i))               :
+                                      plru_q.p4[j];
+            end
+        end
+end
+
+//end: hit
 
 
     assign hit_updt_en = (hit_index_d != hit_index_q) ;
