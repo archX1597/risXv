@@ -35,6 +35,10 @@ package mms_pkg;
     typedef struct packed {
         logic [`PPN1_WD - 1 : 0] ppn1;
         logic [`PPN0_WD - 1 : 0] ppn0;
+    } ppn_t;
+    
+    typedef struct packed {
+        ppn_t ppn;
         logic [1:0] rsw;
         logic dirty;
         logic accessed;
