@@ -71,48 +71,43 @@ module itlb(
 
 
     assign va = vaddr_i;
-    assign itlb_miss = |itlb_entry_hit;
-    genvar i;
-    generate
-        for (i = 0; i < `ITLB_ENTRY_NUM; i++) begin : gen_itlb_camline
-            itlb_camline u_itlb_camline (
-                // Inputs
-                .asid_i     (asid_i[`ASID_WD-1:0]),
-                .clk_i      (clk_i),
-                .pte_g      (pte_g),
-                .rstn_i     (rstn_i),
-                .tag_vpn_i  ({va.vpn1,va.vpn0}),
-                .tlb_flush_i(tlb_flush_i),
-                .write_en_i (write_en_i),
-                // Outputs
-                .hit_o      (itlb_entry_hit[i])
-            );
-        end
-    endgenerate
-
+    assign itlb_miss = ~(|itlb_entry_hit);
 
 
     logic read_en_i;
-    logic [`TLB_ENTRY_NUM - 1 : 0] pte_wr_i [`MXLEN - 1 :0] ;
-    logic [`TLB_ENTRY_NUM - 1 : 0] pte_rd_o [`MXLEN - 1 :0] ;
+    logic [`TLB_ENTRY_NUM - 1 : 0] pte_wr_i;
+    logic [`TLB_ENTRY_NUM - 1 : 0] pte_rd_array [`MXLEN - 1 :0] ;
+    logic [`MXLEN - 1 : 0] pte_rd_o;
 
 
     assign read_en_i  = itlb_hit_o;
+
     generate
     //instance Ram line
      for (i = 0; i < `ITLB_ENTRY_NUM; i++) begin : gen_itlb_ramline
             itlb_ramline u_itlb_ramline (
                 // Inputs
                 .clk_i     (clk_i),
-                .pte_wr_i  (pte_wr_i[i]),
+                .pte_wr_i  (pte_wr_i),
                 .read_en_i (read_en_i),
                 .rstn_i    (rstn_i),
                 .write_en_i(write_en_i),
                 // Outputs
-                .pte_rd_o  (pte_rd_o[i])
+                .pte_rd_o  (pte_rd_array[i])
             );
      end
     endgenerate
 
+
+    always_comb begin
+        pte_rd_o = '0;
+        for (int i = 0 ; i < `ITLB_ENTRY_NUM; i++) begin
+            pte_rd_o = pte_rd_o | pte_rd_array[i];
+        end
+    end
+
+
+    //ITLB_Control_logic
+    assign access_except_o = itlb_miss | pte.read == 'b0 | pte.valid == 'b0;
 
 endmodule

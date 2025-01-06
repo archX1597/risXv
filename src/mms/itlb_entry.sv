@@ -1,5 +1,5 @@
 import mms_pkg::*;
-module itlb_ramline(
+module itlb_entry(
     input  logic clk_i,
     input  logic rstn_i,
     input  logic read_en_i,
@@ -11,4 +11,5 @@ module itlb_ramline(
     `D_FLIP_FLOP(pte_reg, clk_i, rstn_i, pte_d, pte_q, write_en_i);
     assign pte_d = pte_wr_i;
     assign pte_rd_o = read_en_i ? pte_q : '0;
+    
 endmodule

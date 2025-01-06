@@ -1,5 +1,5 @@
 import mms_pkg::*;
-module itlb_camline
+module itlb_tag
     (
         input  logic clk_i,
         input  logic rstn_i,
@@ -55,4 +55,5 @@ module itlb_camline
     assign vpn1_match = (tag_vpn_q.vpn1 == tag_vpn_d.vpn1);
     assign vpn0_match = (tag_vpn_q.vpn0 == tag_vpn_d.vpn0);
     assign hit_o = valid_q & asid_match & vpn1_match & vpn0_match;
+    
 endmodule
