@@ -16,12 +16,12 @@ module itlb_entryArray(
             itlb_entry u_itlb_entry(
                 // Inputs
                 .clk_i     (clk_i),
-                .pte_wr_i  (pte_wr_i),
+                .pte_wr_entry_i  (pte_wr_i),
                 .read_en_i (rd_en_i[i]),
                 .rstn_i    (rstn_i),
                 .write_en_i(wr_en_i[i]),
                 // Outputs
-                .pte_rd_o  (pte_rd_array[i])
+                .pte_rd_entry_o  (pte_rd_array[i])
             );
         end
     endgenerate

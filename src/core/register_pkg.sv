@@ -1,5 +1,5 @@
-import risXv_macro::*;
 package register_pkg;
+    import risXv_macro::*;
     typedef struct packed{
         logic [`MODE_WD - 1 : 0]  mode;
         logic [`ASID_WD - 1 : 0]  aisd;
