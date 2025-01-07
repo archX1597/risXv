@@ -26,40 +26,35 @@ module itlb_entryArray(
         end
     endgenerate
 
-
-    always_comb begin
-        pte_rd_o = '0;
-        pte_rd_o = pte_rd_o | pte_rd_array[0];
-        pte_rd_o = pte_rd_o | pte_rd_array[1];
-        pte_rd_o = pte_rd_o | pte_rd_array[2];
-        pte_rd_o = pte_rd_o | pte_rd_array[3];
-        pte_rd_o = pte_rd_o | pte_rd_array[4];
-        pte_rd_o = pte_rd_o | pte_rd_array[5];
-        pte_rd_o = pte_rd_o | pte_rd_array[6];
-        pte_rd_o = pte_rd_o | pte_rd_array[7];
-        pte_rd_o = pte_rd_o | pte_rd_array[8];
-        pte_rd_o = pte_rd_o | pte_rd_array[9];
-        pte_rd_o = pte_rd_o | pte_rd_array[10];
-        pte_rd_o = pte_rd_o | pte_rd_array[11];
-        pte_rd_o = pte_rd_o | pte_rd_array[12];
-        pte_rd_o = pte_rd_o | pte_rd_array[13];
-        pte_rd_o = pte_rd_o | pte_rd_array[14];
-        pte_rd_o = pte_rd_o | pte_rd_array[15];
-        pte_rd_o = pte_rd_o | pte_rd_array[16];
-        pte_rd_o = pte_rd_o | pte_rd_array[17];
-        pte_rd_o = pte_rd_o | pte_rd_array[18];
-        pte_rd_o = pte_rd_o | pte_rd_array[19];
-        pte_rd_o = pte_rd_o | pte_rd_array[20];
-        pte_rd_o = pte_rd_o | pte_rd_array[21];
-        pte_rd_o = pte_rd_o | pte_rd_array[22];
-        pte_rd_o = pte_rd_o | pte_rd_array[23];
-        pte_rd_o = pte_rd_o | pte_rd_array[24];
-        pte_rd_o = pte_rd_o | pte_rd_array[25];
-        pte_rd_o = pte_rd_o | pte_rd_array[26];
-        pte_rd_o = pte_rd_o | pte_rd_array[27];
-        pte_rd_o = pte_rd_o | pte_rd_array[28];
-        pte_rd_o = pte_rd_o | pte_rd_array[29];
-        pte_rd_o = pte_rd_o | pte_rd_array[30];
-        pte_rd_o = pte_rd_o | pte_rd_array[31];
-    end
+    assign pte_rd_o =   pte_rd_array[0]
+                      | pte_rd_array[1] 
+                      | pte_rd_array[2] 
+                      | pte_rd_array[3] 
+                      | pte_rd_array[4] 
+                      | pte_rd_array[5] 
+                      | pte_rd_array[6] 
+                      | pte_rd_array[7] 
+                      | pte_rd_array[8] 
+                      | pte_rd_array[9] 
+                      | pte_rd_array[10]
+                      | pte_rd_array[11]
+                      | pte_rd_array[12]
+                      | pte_rd_array[13]
+                      | pte_rd_array[14]
+                      | pte_rd_array[15]
+                      | pte_rd_array[16]
+                      | pte_rd_array[17]
+                      | pte_rd_array[18]
+                      | pte_rd_array[19]
+                      | pte_rd_array[20]
+                      | pte_rd_array[21]
+                      | pte_rd_array[22]
+                      | pte_rd_array[23]
+                      | pte_rd_array[24]
+                      | pte_rd_array[25]
+                      | pte_rd_array[26]
+                      | pte_rd_array[27]
+                      | pte_rd_array[28]
+                      | pte_rd_array[29]
+                      | pte_rd_array[30];
 endmodule
