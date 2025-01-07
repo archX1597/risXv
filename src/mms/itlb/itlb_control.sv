@@ -18,7 +18,6 @@ module itlb_control (
 
     assign satp = satp_i;
     assign pte = pte_i  ;
-
     assign tlb_miss   = ~tag_hit_i | ~pte.read & pte.write | ~pte.xcute | (satp.mode == 2'b00) ;
     assign tlb_hit    = ~tlb_miss ;
     assign tlb_miss_o = tlb_miss;
