@@ -63,9 +63,19 @@ module itlb_tag
         @(posedge clk_i) disable iff (!rstn_i)
         (valid_q & asid_match & vpn1_match & vpn0_match) |-> hit_o;
     endproperty
+
     property itlb_tag_flush;
         @(posedge clk_i) disable iff (!rstn_i)
         (tlb_flush_i) |-> !valid_q;
     endproperty
+
+    property itlb_write;
+        @(posedge clk_i) disable iff (!rstn_i)
+        (write_en_i) |=> (valid_q == 1);
+    endproperty
+    
+    assert property (itlb_tag_match) else $error("itlb_tag_match timing failed");
+    assert property (itlb_tag_flush) else $error("itlb_tag_flush timing failed");
+    assert property (itlb_write) else $error("itlb_write timing failed");
 endmodule
 

@@ -1,12 +1,12 @@
 import mms_pkg::*;
 module plru_32(
         input logic rstn_i,clk_i,
-        input logic [`TLB_ENTRY_SIZE - 1 : 0] entry_valid_i,
-        input logic [`TLB_ENTRY_SIZE - 1 : 0] itlb_rd_hit_i,
+        input logic [`ITLB_ENTRY_SIZE - 1 : 0] entry_valid_i,
+        input logic [`ITLB_ENTRY_SIZE - 1 : 0] itlb_rd_hit_i,
         input logic itlb_hit_vld_i,
         input logic itlb_refill_rq_i,//request to the update the Refill location
         input logic itlb_refill_vld_i,
-        output logic [`TLB_ENTRY_SIZE - 1 : 0] itlb_refill_onehot_o
+        output logic [`ITLB_ENTRY_SIZE - 1 : 0] itlb_refill_onehot_o
     );//for tlb
     
 
@@ -33,7 +33,7 @@ module plru_32(
         logic [15:0] p4;
     } plru_q,plru_d_refill,plru_d_hit;
 
-    logic [$clog2(`TLB_ENTRY_SIZE) - 1 : 0 ] write_index,hit_index_d,hit_index_q,refill_index,plru_index;
+    logic [$clog2(`ITLB_ENTRY_SIZE) - 1 : 0 ] write_index,hit_index_d,hit_index_q,refill_index,plru_index;
     logic hit_updt_en;
     logic wr_updt_en;
 
@@ -188,7 +188,7 @@ module plru_32(
 
 
 always_comb begin
-    for (int i = 0; i < $clog2(`TLB_ENTRY_SIZE); i++)
+    for (int i = 0; i < $clog2(`ITLB_ENTRY_SIZE); i++)
         for (int j = 0; j < 2**i; j++) begin
             if (i == 0) begin
                 plru_d_refill.p0 = wr_updt_en  ? !refill_index[4] : plru_q.p0;

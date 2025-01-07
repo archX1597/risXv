@@ -9,7 +9,7 @@ module itlb(
         input  logic fu_access_i,
         input  logic [`ASID_WD - 1 :0] asid_i,
         input  logic [`VADDR_WD - 1 :0 ] vaddr_i,
-        input  logic [`MXLEN - 1 : 0] satp,
+        input  logic [`MODE_WD - 1 :0] mode_i,
         //output port
         output logic [`PADDR_WD - 1 : 0] paddr_o,
         output logic itlb_hit_o,
@@ -54,13 +54,13 @@ module itlb(
 // - R: 1 bit (Read Bit, indicates if the page is readable)
 // - V: 1 bit (Valid Bit, indicates if the PTE is valid)
     
-    itlb_entry_t itlb [`ITLB_ENTRY_NUM - 1 : 0];
-    logic [`ITLB_ENTRY_NUM - 1 : 0] itlb_entry_hit; 
+    itlb_entry_t itlb [`ITLB_ENTRY_SIZE - 1 : 0];
+    logic [`ITLB_ENTRY_SIZE - 1 : 0] itlb_entry_hit; 
     pte_t pte;
     va_t va;
     pa_t pa;
     logic [`PADDR_WD - 1 : 0] paddr;
-    logic [`ITLB_ENTRY_NUM - 1 : 0] itlb_entry_hit;
+    logic [`ITLB_ENTRY_SIZE - 1 : 0] itlb_entry_hit;
     logic itlb_miss;
     logic page_fault, access_except, misalign_access;
     //TLB Hit
@@ -76,8 +76,8 @@ module itlb(
 
 
     logic read_en_i;
-    logic [`TLB_ENTRY_NUM - 1 : 0] pte_wr_i;
-    logic [`TLB_ENTRY_NUM - 1 : 0] pte_rd_array [`MXLEN - 1 :0] ;
+    logic [`ITLB_ENTRY_SIZE - 1 : 0] pte_wr_i;
+    logic [`ITLB_ENTRY_SIZE - 1 : 0] pte_rd_array [`MXLEN - 1 :0] ;
     logic [`MXLEN - 1 : 0] pte_rd_o;
 
 

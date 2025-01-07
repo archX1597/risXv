@@ -1,6 +1,5 @@
 package mms_macro;
-    `define TLB_ENTRY_NUM 32
-    `define ITLB_ENTRY_NUM 32
+    `define ITLB_ENTRY_SIZE 32
     //Memory Manage System
     `define PADDR_WD 34
     `define VADDR_WD 32
@@ -18,5 +17,4 @@ package mms_macro;
     `define PAGE_OFFSET 12
     `define VPN1_WD   10
     `define VPN0_WD   10
-    `define TLB_ENTRY_SIZE 32
 endpackage
