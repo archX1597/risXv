@@ -9,6 +9,7 @@ module itlb(
         input  logic fu_access_i,
         input  logic [`ASID_WD - 1 :0] asid_i,
         input  logic [`VADDR_WD - 1 :0 ] vaddr_i,
+        input  logic [`MXLEN - 1 : 0] satp,
         //output port
         output logic [`PADDR_WD - 1 : 0] paddr_o,
         output logic itlb_hit_o,
@@ -82,32 +83,10 @@ module itlb(
 
     assign read_en_i  = itlb_hit_o;
 
-    generate
-    //instance Ram line
-     for (i = 0; i < `ITLB_ENTRY_NUM; i++) begin : gen_itlb_ramline
-            itlb_ramline u_itlb_ramline (
-                // Inputs
-                .clk_i     (clk_i),
-                .pte_wr_i  (pte_wr_i),
-                .read_en_i (read_en_i),
-                .rstn_i    (rstn_i),
-                .write_en_i(write_en_i),
-                // Outputs
-                .pte_rd_o  (pte_rd_array[i])
-            );
-     end
-    endgenerate
-
-
-    always_comb begin
-        pte_rd_o = '0;
-        for (int i = 0 ; i < `ITLB_ENTRY_NUM; i++) begin
-            pte_rd_o = pte_rd_o | pte_rd_array[i];
-        end
-    end
-
 
     //ITLB_Control_logic
     assign access_except_o = itlb_miss | pte.read == 'b0 | pte.valid == 'b0;
+    //ITLB_FSM
+    
 
 endmodule
