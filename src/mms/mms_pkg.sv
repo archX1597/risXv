@@ -14,12 +14,7 @@ package mms_pkg;
         logic [`CACHE_TAG_WD - 1 : 0] cc_tag;
     } cache_line_t;
 
-    typedef struct packed {
-        logic [`VPN1_WD     - 1 : 0]      vpn1 ;
-        logic [`VPN0_WD     - 1 : 0]      vpn0 ;
-        logic [`PAGE_OFFSET - 1 : 0]      pg_offset ;
-    } va_t;
-
+`ifdef PRIVILEGE_ARCH
     typedef struct packed {
         logic i;
     } pa_t;
@@ -29,7 +24,11 @@ package mms_pkg;
     } inst_set_t ;
 //TLB
 
-
+    typedef struct packed {
+        logic [`VPN1_WD     - 1 : 0]      vpn1 ;
+        logic [`VPN0_WD     - 1 : 0]      vpn0 ;
+        logic [`PAGE_OFFSET - 1 : 0]      pg_offset ;
+    } va_t;
 //MMU
     typedef struct packed {
         logic [`PPN1_WD - 1 : 0] ppn1;
@@ -59,5 +58,5 @@ package mms_pkg;
         logic [`ASID_WD - 1:0] asid;
         logic [`MODE_WD - 1:0] mode;
     } itlb_entry_t;
-
+`endif
 endpackage

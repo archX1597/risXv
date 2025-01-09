@@ -1,3 +1,12 @@
 {
-    "remote.autoForwardPortsFallback": 0
+    "remote.autoForwardPortsFallback": 0,
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "${VCS_HOME}/include/systemc234"
+    ],
+    "files.associations": {
+        "map": "cpp",
+        "vector": "cpp",
+        "*.tcc": "cpp"
+    }
 }

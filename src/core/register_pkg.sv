@@ -1,5 +1,7 @@
 package register_pkg;
     import risXv_macro::*;
+
+`ifdef PRIVILEGE_ARCH
     typedef struct packed{
         logic [`MODE_WD - 1 : 0]  mode;
         logic [`ASID_WD - 1 : 0]  aisd;
@@ -94,5 +96,8 @@ package register_pkg;
     typedef struct packed {
         logic [31:0] interrupts;
     } mie_t;
+`endif
+
+
     
 endpackage
