@@ -7,6 +7,7 @@
     "files.associations": {
         "map": "cpp",
         "vector": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "iostream": "cpp"
     }
 }
