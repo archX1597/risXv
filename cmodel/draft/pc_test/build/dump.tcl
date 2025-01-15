@@ -1,0 +1,2 @@
+fsdbDumpvars +all
+run
