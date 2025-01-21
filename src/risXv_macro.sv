@@ -12,4 +12,6 @@ package risXv_macro;
             q <= d; \
         end \
     end
+
+`define BOOT_PC 32'h00000000;
 endpackage
