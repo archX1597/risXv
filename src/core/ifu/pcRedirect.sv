@@ -1,6 +1,4 @@
-import risXv_macro:
-:
-*;
+import risXv_macro::*;
 `define REDIR_SRC_NUM 4
 //This Component is used to arbitrate the pcRedirect request from different modules
 //The priority is exu > if2 > if1 > if0
