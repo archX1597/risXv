@@ -4,14 +4,15 @@ VIEWER   = Verdi-Ultra
 VERDI_RC = ~/.script/novas.rc
 SRC_DIR  = ../src
 
+SRC = $(SRC_DIR)/IMEM.cpp $(SRC_DIR)/IMEM.hpp $(SRC_DIR)/Imem_rd_wr_test.cpp
 .PHONY:all
 all: scan comp sim
 .PHONY:scan
 scan:
-	syscan -cpp $(GCC) -kdb -cflags -g $(SRC_DIR)/*.cpp
+	syscan -cpp $(GCC) -kdb -cflags -g $(SRC)
 .PHONY:comp
 comp:
-	$(COMPILER) -sysc=show_sc_main -kdb -debug_access+all $(SRC_DIR)/*.cpp -cpp $(GCC) 
+	$(COMPILER) -sysc=show_sc_main -kdb -debug_access+all -cpp $(GCC) 
 
 .PHONY:sim
 sim:

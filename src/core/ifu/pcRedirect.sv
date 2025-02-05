@@ -7,17 +7,17 @@ import risXv_macro::*;
 module pcRedirect
     (
 
-        input  logic  [`MXLEN - 1 : 0] i_if0_pcRedirect_npc,
-        input  logic  [`MXLEN - 1 : 0] i_if1_pcRedirect_npc,
-        input  logic  [`MXLEN - 1 : 0] i_if2_pcRedirect_npc,
-        input  logic  [`MXLEN - 1 : 0] i_exu_pcRedirect_npc,
+        input  logic  [`MXLEN - 1 : 0]  i_if0_pcRedirect_npc,
+        input  logic  [`MXLEN - 1 : 0]  i_if1_pcRedirect_npc,
+        input  logic  [`MXLEN - 1 : 0]  i_if2_pcRedirect_npc,
+        input  logic  [`MXLEN - 1 : 0]  i_exu_pcRedirect_npc,
         //valid signal of each module
-        input  logic                  i_if0_pcRedirect_npc_valid,
-        input  logic                  i_if1_pcRedirect_npc_valid,
-        input  logic                  i_if2_pcRedirect_npc_valid,
-        input  logic                  i_exu_pcRedirect_npc_valid,
-        output logic                  o_pcRedirect_npcGen_npc,
-        output logic                  o_pcRedirect_npcGen_redirect_valid
+        input  logic                    i_if0_pcRedirect_npc_valid,
+        input  logic                    i_if1_pcRedirect_npc_valid,
+        input  logic                    i_if2_pcRedirect_npc_valid,
+        input  logic                    i_exu_pcRedirect_npc_valid,
+        output logic   [`MXLEN - 1 : 0] o_pcRedirect_npcGen_npc,
+        output logic                    o_pcRedirect_npcGen_redirect_valid
     );
 
     //priority : exu > if2 > if1 > if
@@ -35,7 +35,7 @@ module pcRedirect
             o_pcRedirect_npcGen_npc = i_if0_pcRedirect_npc;
         end
         else begin
-            o_pcRedirect_npcGen_npc = o_pcRedirect_npcGen_npc;
+            o_pcRedirect_npcGen_npc = 'h0;
         end
     end
 
@@ -44,18 +44,15 @@ module pcRedirect
                                                 i_if1_pcRedirect_npc_valid |
                                                 i_if0_pcRedirect_npc_valid;
 
+    //Proerty Check
+    //1. Check The Priority of the pcRedirect
+   /*property pcRedirect_priority;
+        (i_exu_pcRedirect_npc_valid && !i_if2_pcRedirect_npc_valid && !i_if1_pcRedirect_npc_valid && !i_if0_pcRedirect_npc_valid) | 
+        (!i_exu_pcRedirect_npc_valid && i_if2_pcRedirect_npc_valid && !i_if1_pcRedirect_npc_valid && !i_if0_pcRedirect_npc_valid) |
+        (!i_exu_pcRedirect_npc_valid && !i_if2_pcRedirect_npc_valid && i_if1_pcRedirect_npc_valid && !i_if0_pcRedirect_npc_valid) |
+        (!i_exu_pcRedirect_npc_valid && !i_if2_pcRedirect_npc_valid && !i_if1_pcRedirect_npc_valid && i_if0_pcRedirect_npc_valid);
+    endproperty
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    assert property(pcRedirect_priority)
+    else $error("pcRedirect_priority is not satisfied");*/
 endmodule

@@ -15,7 +15,7 @@ package bpu_pkg;
         `else
             `define ERROR $error
         `endif
-    `define uINST_OFFSETLEN
+    `define uINST_OFFSETLEN 32
     `define uBTB_DEPTH 512 
     `define uBTB_INDEX_LEN 9
     `define uHASH_LEN 10

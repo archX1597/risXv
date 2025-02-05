@@ -12,19 +12,14 @@ module upht(
     output logic [1:0]                             o_uPhtRd_Cnt
 );
 
-    usat_entry_t sat_table_d [$clog2(`SAT_TABLE_SIZE)-1:0];
-    usat_entry_t sat_table_q [$clog2(`SAT_TABLE_SIZE)-1:0];
-
+    usat_entry_t  sat_table_d [`SAT_TABLE_SIZE-1:0];
+    usat_entry_t  sat_table_q [`SAT_TABLE_SIZE-1:0];
     //Define the Dual Port RAM of Sat_table
 
     always_comb begin:Saturaion_table_update
-        if(i_uPhtWrite_vld) begin
-            sat_table_d[i_uPhtWr_addr].sat_counter = i_commit_Cnt;
-            sat_table_d[i_uPhtWr_addr].valid = 1'b1;
-        end
-        else begin
-            sat_table_d[i_uPhtWr_addr].sat_counter = sat_table_q[i_uPhtWr_addr].sat_counter;
-            sat_table_d[i_uPhtWr_addr].valid = sat_table_q[i_uPhtWr_addr].valid;
+        for(int i = 0; i < `SAT_TABLE_SIZE; i++) begin
+            sat_table_d[i].sat_counter = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? i_commit_Cnt : sat_table_q[i].sat_counter;
+            sat_table_d[i].valid = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? 1'b1 : sat_table_q[i].valid;
         end
     end
 
