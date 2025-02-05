@@ -67,15 +67,16 @@ module PipeIF0(
 
     logic [`MXLEN - 1 : 0] i_pcGen_nPc;
     logic [`MXLEN - 1 : 0] i_pcGen_cPc;
-    logic i_pc_valid;
+    logic i_nPc_valid;
     logic i_pc1_valid;
     logic i_pc2_valid;
     logic o_uPreJump;
+    logic if0_valid;
     logic [`MXLEN - 1 : 0] o_uPreTarget;
 
     assign i_pcGen_nPc = o_pcGen_nPc;
     assign i_pcGen_cPc = o_pcGen_cPc;
-    assign i_pc_valid  = 1'b1;
+    assign i_nPc_valid  = 1'b1;
     assign i_pc1_valid = 1'b1;
     // PC must aligne to 8 bytes
     assign i_pc2_valid = (o_pcGen_cPc[2:0] == 3'b000);
@@ -83,6 +84,14 @@ module PipeIF0(
     assign i_if0_pcRedirect_npc_valid = o_uPreJump;
     assign i_if0_pcRedirect_npc       = o_uPreTarget;
 
+    always_ff @(posedge i_clk or negedge i_rstn) begin
+        if(~i_rstn) begin
+            if0_valid <= 1'b0;
+        end
+        else if(!i_stall)begin
+            if0_valid <= i_nPc_valid;
+        end
+    end
 
     uPredictor u_uPredictor (
         // Inputs
@@ -91,11 +100,12 @@ module PipeIF0(
         .i_last_jump    (i_last_jump),
         .i_pc1_valid    (i_pc1_valid),
         .i_pc2_valid    (i_pc2_valid),
+        .i_if0_valid    (if0_valid),
         .i_pcGen_cPc    (i_pcGen_cPc[`MXLEN-1:0]),
         .i_pcGen_nPc    (i_pcGen_nPc[`MXLEN-1:0]),
         .i_pc_jumpdst   (i_pc_jumpdst[`MXLEN-1:0]),
         .i_pc_jumpsrc   (i_pc_jumpsrc[`MXLEN-1:0]),
-        .i_pc_valid     (i_pc_valid),
+        .i_nPc_valid    (i_nPc_valid),
         .i_rstn         (i_rstn),
         .i_satCnt_update(i_satCnt_update),
         .i_ubtb_update  (i_ubtb_update),

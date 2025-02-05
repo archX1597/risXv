@@ -3,8 +3,8 @@ module ubtb(
     input  logic i_rstn,
     input  logic i_clk,
     input  logic i_ubtb_update,
-    input  logic i_pc_valid,
-    input  logic [`MXLEN - 1 : 0] i_pc,i_pc_jumpsrc,
+    input  logic i_nPc_vld,
+    input  logic [`MXLEN - 1 : 0] i_nPc,i_pc_jumpsrc,
     input  logic [`MXLEN - 1 : 0] i_pc_jumpdst,
     input  logic i_pc1_valid,i_pc2_valid,
     output logic [`MXLEN - 1 : 0] o_targetSegment,
@@ -23,7 +23,7 @@ module ubtb(
     logic [`uBTB_INDEX_LEN - 1 : 0] pc_index_ff;
     logic [`uHASH_LEN - 1 : 0] pc1_hash,pc2_hash;
 
-    assign pc1_Prehash = i_pc; 
+    assign pc1_Prehash = i_nPc; 
     assign pc2_Prehash = pc1_Prehash + 4;
     assign pc_jumpsrc_Prehash = i_pc_jumpsrc;
 
@@ -83,7 +83,7 @@ module ubtb(
         .clk  (i_clk),
         .i_rstn(i_rstn),
         .raddr(pc1_Afthash.pc_index),
-        .re   (i_pc_valid),
+        .re   (i_nPc_vld),
         .waddr(pc_jumpsrc_Afthash.pc_index),
         .wdata(btb_TagWr.tag),
         .we   (i_ubtb_update),
@@ -102,7 +102,7 @@ module ubtb(
         .clk  (i_clk),
         .i_rstn(i_rstn),
         .raddr(pc1_Afthash.pc_index),
-        .re   (i_pc_valid),
+        .re   (i_nPc_vld),
         .waddr(pc_jumpsrc_Afthash.pc_index),
         .wdata(btb_InstWr.inst_offset),
         .we   (i_ubtb_update),

@@ -3,12 +3,13 @@ module uPredictor
         input  logic i_clk,
         input  logic i_rstn,
         input  logic [`MXLEN - 1 : 0] i_pcGen_nPc,i_pcGen_cPc,i_pc_jumpdst,i_pc_jumpsrc,
-        input  logic i_pc_valid,i_pc1_valid,i_pc2_valid,
+        input  logic i_nPc_valid,i_pc1_valid,i_pc2_valid,
         input  logic i_ubtb_update,
         input  logic i_upht_update,
         input  logic i_ghr_update,
         input  logic i_satCnt_update,
         input  logic i_last_jump,
+        input  logic i_if0_valid,
         output logic o_uPreJump,
         output logic [`MXLEN - 1 : 0] o_uPreTarget
     );
@@ -33,18 +34,18 @@ module uPredictor
         end
     end
 
-    logic [`MXLEN - 1 : 0] i_pc;
+    logic [`MXLEN - 1 : 0] i_nPc;
     logic [`MXLEN - 1 : 0] o_targetSegment;
     logic o_target_valid;
     logic o_target_miss;
 
-    assign i_pc = i_pcGen_nPc;
+    assign i_nPc = i_pcGen_nPc;
     ubtb u_ubtb (
         // Inputs
         .i_clk          (i_clk),
-        .i_pc           (i_pc[32-1:0]),
+        .i_nPc          (i_nPc),
         .i_pc_jumpsrc   (i_pc_jumpsrc[32-1:0]),
-        .i_pc_valid     (i_pc_valid),
+        .i_nPc_vld      (i_nPc_valid),
         .i_rstn         (i_rstn),
         .i_ubtb_update  (i_ubtb_update),
         .i_pc1_valid    (i_pc1_valid),
@@ -56,8 +57,6 @@ module uPredictor
         .o_target_valid (o_target_valid)
     );
 
-    logic [1:0] i_uPhtRead_Cnt;
-    logic [1:0] o_fifoRdCnt;
     logic o_SatCnt_Miss;
     logic o_SatCnt_Full;
 
@@ -69,38 +68,43 @@ module uPredictor
     logic [1:0] o_uPhtRd_Cnt;
     logic [1:0] i_commit_Cnt;
 
-    assign i_uPhtRead_vld = i_pc_valid;
+    assign i_uPhtRead_vld = i_if0_valid;
     assign i_uPhtWrite_vld = i_upht_update;
     assign i_uPht_enable = 1'b1;
-    assign i_uPhtRd_addr = i_ghr_update ? i_pc[11:3] ^ {ghr[8:0],i_last_jump} : ghr;
+    assign i_uPhtRd_addr = i_ghr_update ? i_pcGen_cPc[11:3] ^ {ghr[8:0],i_last_jump} : ghr ^ i_pcGen_cPc[11:3];
     assign i_uPhtWr_addr = i_pc_jumpsrc[11:3] ^ ghr[9:0];
     assign o_uPreJump = o_uPhtRd_Cnt[1] && o_target_valid && !o_target_miss;
     assign o_uPreTarget = o_targetSegment;
 
-    //last jump and o_fifoRdCnt use to update the saturation counter
-    assign i_commit_Cnt = i_last_jump && (o_fifoRdCnt == 2'b11)  ?  2'b11 : 
-                          i_last_jump && (o_fifoRdCnt != 2'b11)  ?  o_fifoRdCnt + 1 :
-                          !i_last_jump && (o_fifoRdCnt != 2'b00) ?  o_fifoRdCnt - 1 :
-                          !i_last_jump && (o_fifoRdCnt == 2'b00) ?  2'b00 : 2'b00; 
+    //last jump and o_SatCntFIFO_RdCnt use to update the saturation counter;
 
+    logic i_SatCntFIFO_Read;
+    logic i_SatCntFIFO_Write;
+    logic [1:0] i_SatCntFIFO_WrCnt;
+    logic [1:0] o_SatCntFIFO_RdCnt;
+    assign i_SatCntFIFO_Read = i_upht_update;
+    assign i_SatCntFIFO_Write = i_uPhtRead_vld & o_target_valid;
+    assign i_SatCntFIFO_WrCnt = o_uPhtRd_Cnt;
+    assign i_commit_Cnt = i_last_jump && (o_SatCntFIFO_RdCnt == 2'b11)  ?  2'b11 : 
+    i_last_jump && (o_SatCntFIFO_RdCnt != 2'b11)  ?  o_SatCntFIFO_RdCnt + 1 :
+    !i_last_jump && (o_SatCntFIFO_RdCnt != 2'b00) ?  o_SatCntFIFO_RdCnt - 1 :
+    !i_last_jump && (o_SatCntFIFO_RdCnt == 2'b00) ?  2'b00 : 2'b00; 
 
-
-    assign i_uPhtRead_Cnt = o_uPhtRd_Cnt;
     SatCntFifo #(
         .DATA_WIDTH(2),
         .FIFO_DEPTH(8)
     )
     u_SatCntFifo (
         // Inputs
-        .i_clk          (i_clk),
-        .i_rstn         (i_rstn),
-        .i_satCnt_update(i_satCnt_update),
-        .i_uPhtRead_Cnt (i_uPhtRead_Cnt[1:0]),
-        .i_uPhtRead_vld (i_uPhtRead_vld),
+        .i_SatCntFIFO_Read (i_SatCntFIFO_Read),
+        .i_SatCntFIFO_WrCnt(i_SatCntFIFO_WrCnt[1:0]),
+        .i_SatCntFIFO_Write(i_SatCntFIFO_Write),
+        .i_clk             (i_clk),
+        .i_rstn            (i_rstn),
         // Outputs
-        .o_RdCnt        (o_fifoRdCnt[1:0]),
-        .o_SatCnt_Full  (o_SatCnt_Full),
-        .o_SatCnt_Miss  (o_SatCnt_Miss)
+        .o_SatCntFIFO_RdCnt(o_SatCntFIFO_RdCnt[1:0]),
+        .o_SatCnt_Full     (o_SatCnt_Full),
+        .o_SatCnt_Miss     (o_SatCnt_Miss)
     );
 
     upht u_upht (

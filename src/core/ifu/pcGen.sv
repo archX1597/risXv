@@ -49,12 +49,12 @@ module pcGen
     //Proerty Check
     property pcGen_npcFetch_valid;
         @(posedge i_clk)
-        disable iff(i_rstn)
+        disable iff(~i_rstn)
         (i_stall == 1'b0) |-> o_pcGen_nPcFetch_valid;
     endproperty
 
     property iRST_Priority_Check;
-        @(posedge i_clk) i_rstn |-> (boot_pc == o_pcGen_nPc);
+        @(posedge i_clk) ~i_rstn |-> (boot_pc == o_pcGen_nPc);
     endproperty
 
     property Stall_Priority_Check;

@@ -12,14 +12,16 @@ module upht(
     output logic [1:0]                             o_uPhtRd_Cnt
 );
 
-    usat_entry_t  sat_table_d [`SAT_TABLE_SIZE-1:0];
-    usat_entry_t  sat_table_q [`SAT_TABLE_SIZE-1:0];
+    logic [1:0]  sat_table_d [`SAT_TABLE_SIZE-1:0];
+    logic [1:0]  sat_table_q [`SAT_TABLE_SIZE-1:0];
+    logic sat_table_vld_q [`SAT_TABLE_SIZE-1:0];
+    logic sat_table_vld_d [`SAT_TABLE_SIZE-1:0];
     //Define the Dual Port RAM of Sat_table
 
     always_comb begin:Saturaion_table_update
         for(int i = 0; i < `SAT_TABLE_SIZE; i++) begin
-            sat_table_d[i].sat_counter = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? i_commit_Cnt : sat_table_q[i].sat_counter;
-            sat_table_d[i].valid = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? 1'b1 : sat_table_q[i].valid;
+            sat_table_d[i] = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? i_commit_Cnt : sat_table_q[i];
+            sat_table_vld_d[i] = (i==i_uPhtWr_addr)&&i_uPhtWrite_vld ? 1'b1 : sat_table_vld_q[i];
         end
     end
 
@@ -27,23 +29,23 @@ module upht(
     always_ff @(posedge i_clk or negedge i_rstn) begin:Sat_table_ram
         for (int i = 0; i < `SAT_TABLE_SIZE; i++) begin
             if(~i_rstn) begin
-                sat_table_q[i].sat_counter <= 2'b10;
-                sat_table_q[i].valid <= 1'b0;
+                sat_table_q[i] <= 2'b01;
+                sat_table_vld_q[i] <= 1'b0;
             end
             else if(i_uPht_enable) begin
-                sat_table_q[i].sat_counter <= sat_table_d[i].sat_counter;
-                sat_table_q[i].valid <= sat_table_d[i].valid;
+                sat_table_q[i] <= sat_table_d[i];
+                sat_table_vld_q[i] <= sat_table_vld_d[i];
             end
         end
     end
 
 
-    assign o_uPhtRd_Cnt = i_uPhtRead_vld ? sat_table_q[i_uPhtRd_addr].sat_counter : 2'b10;
+    assign o_uPhtRd_Cnt = i_uPhtRead_vld ? sat_table_q[i_uPhtRd_addr] : 2'b10;
 
     property Sat_table_update;
         @(posedge i_clk)
         disable iff(~i_uPht_enable | ~i_uPhtWrite_vld | ~i_rstn)
-        (i_uPhtWrite_vld) |=> (sat_table_d[$past(i_uPhtWr_addr)].sat_counter == $past(i_commit_Cnt));
+        (i_uPhtWrite_vld) |=> (sat_table_d[$past(i_uPhtWr_addr)] == $past(i_commit_Cnt));
     endproperty
 
     assert property(Sat_table_update)
@@ -52,7 +54,7 @@ module upht(
     property Sat_table_read;
         @(posedge i_clk)
         disable iff(~i_uPht_enable | ~i_uPhtRead_vld | ~i_rstn)
-        (i_uPhtRead_vld) |-> (o_uPhtRd_Cnt == sat_table_q[i_uPhtRd_addr].sat_counter);
+        (i_uPhtRead_vld) |-> (o_uPhtRd_Cnt == sat_table_q[i_uPhtRd_addr]);
     endproperty
 
     assert property(Sat_table_read)
